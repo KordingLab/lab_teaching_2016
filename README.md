@@ -30,17 +30,19 @@ Parameters in `XGBoost` and basic usage of `XGBoost`.
 
 ### Session 4
 
-[Ari Benjamin](http://kordinglab.com/people/ari_benjamin/index.html) on Gradient Descent on November 1st 3-4 PM.
-Ari will teach us about [optimization technique in Deep learning](http://www.deeplearningbook.org/contents/optimization.html) including popular Stochastic Gradient Descent (SGD), Momentum technique, RMSProp, AdaGrad,
-Adam, Approximate Second Order method, Conjugate gradient method (and more).
-Plus some coding example on how to apply these optimization.
-
-### Session 5
-
 [Roozbeh Farhoodi](http://kordinglab.com/people/roozbeh_farhoodi/index.html)
 on Generative Adversarial Networks (GAN) on November 8th 3-4 PM. GAN is a very popular
 deep learning framework that consists of 2 components: discriminative model `D`
 and generative model `G`. He'll go through some math and gist behind GAN.
+
+
+### Session 5
+
+[Ari Benjamin](http://kordinglab.com/people/ari_benjamin/index.html) on Gradient Descent on November 15th 3-4 PM.
+Ari will teach us about [optimization technique in Deep learning](http://www.deeplearningbook.org/contents/optimization.html) including popular Stochastic Gradient Descent (SGD), Momentum technique, RMSProp, AdaGrad,
+Adam, Approximate Second Order method, Conjugate gradient method (and more).
+Plus some coding example on how to apply these optimization.
+
 
 ### Session 6
 
