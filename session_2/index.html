@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Title</title>
+    <meta charset="utf-8">
+    <style>
+
+      @import url(https://fonts.googleapis.com/css?family=Droid+Serif:400,700,400italic);
+      @import url(https://fonts.googleapis.com/css?family=Ubuntu+Mono:400,700,400italic);
+      @import url(https://fonts.googleapis.com/css?family=Hind|Abel:400,700);
+      body { font-family: 'Abel'; }
+      h1, h2, h3, h4 {
+        font-family: 'Abel';
+        font-weight: normal;
+        color: red;
+      }
+      .remark-code, .remark-inline-code {
+        font-family: 'Ubuntu Mono';
+      }
+    </style>
+  </head>
+  <body>
+    <textarea id="source">
+
+class: center, middle
+
+# Introduction to `XGBoost`
+
+basics and programming of `XGBoost` in Python
+
+credit [Practical XGBoost in Python](http://education.parrotprediction.teachable.com/p/practical-xgboost-in-python)
+by [Norbert Kozlowski](https://github.com/khozzy)
+
+---
+
+### Introduction
+
+`XGBoost` is short for “Extreme Gradient Boosting”. The term “Gradient Boosting”
+is proposed in the paper Greedy Function Approximation: A Gradient Boosting Machine, by Friedman.
+Author of `XGBoost` is Tianqi Chen from University of Washington. You can see his
+slide [here](http://homes.cs.washington.edu/~tqchen/pdf/BoostedTree.pdf).
+
+#### Reference
+
+- [Introduction to Boosted Trees](http://xgboost.readthedocs.io/en/latest/model.html)
+- [Practical XGBoost in Python](http://education.parrotprediction.teachable.com/p/practical-xgboost-in-python)
+
+
+---
+
+### Boosting
+
+> **Boosting** (*Freud and Shapire, 1996*) - algorithm allowing to fit **many**
+weak classifiers to **reweighted** versions of the training data.
+Classify final examples by majority voting.
+
+When using boosting techinque all instance in dataset are assigned a score that
+tells _how difficult to classify_ they are. In each following iteration the algorithm
+pays more attention (assign bigger weights) to instances that were wrongly classified previously.
+
+---
+
+### Weak classifier - why tree?
+
+> **Weak classifier** - an algorithm **slightly better** than random guessing.
+
+#### **Pro's**
+- computational scalability, handling missing values,
+- robust to outliers,
+- does not require feature scaling,
+- can deal with irrelevant inputs,
+- can handle mixed predictors (quantitive and qualitative)
+
+#### **Con's**
+
+- can't extract linear combination of features
+- small predictive power (high variance)
+
+Boosting techinque can try to reduce the variance by **averaging** many **different**
+trees (where each one is solving the same problem)
+
+---
+
+### AdaBoost (Adaptive Boosting)
+
+The implementation of boosting technique using decision tress (it's a *meta-estimator*
+which means you can fit any classifier in). The intuitive recipie is presented below:
+
+**Algorithm:**
+
+Assume that the number of training samples is denoted by `\(N\)`, and the number of iterations (created trees) is `\(M\)`.
+Notice that possible class outputs are `\(Y=\{-1,1\}\)`
+
+1. Initialize the observation weights `\(w_i=\frac{1}{N}\)` where `\(i = 1,2, \dots, N \)`
+2. For `\(m=1\)` to `\(M\)`:
+    - fit a classifier `\(G_m(x)\)` to the training data using weights `\(w_i\)`,
+    - compute `\(err_m = \frac{\sum_{i=1}^{N} w_i I (y_i \neq G_m(x))}{\sum_{i=1}^{N}w_i}\)`,
+    - compute `\(\alpha_m = \log ((1-err_m)/err_m)\)`,
+    - set `\(w_i \leftarrow w_i \cdot \exp [\alpha_m \cdot I (y_i \neq G_m(x)]\)`, where `\(i = 1,2, \dots, N\)`
+3. Output `\(G_m(x) = sign [\sum_{m=1}^{M} \alpha_m G_m(x)]\)`
+
+---
+
+### Generalized Boosted Models (GBM)
+
+We can take advantage of the fact that the loss function can be represented with
+a form suitable for optimalization (due to the stage-wise additivity). This creates
+a class of general boosting algorithms named simply **generalized boosted model (GBM)**.
+
+An example of a GBM is **Gradient Boosted Tree** which uses decision tree as an estimator.
+It can work with different loss functions (regression, classification, risk modeling etc.),
+evaluate it's  gradient and approximates it with a simple tree (stage-wisely, that minimizes the overall error).
+
+AdaBoost is a special case of Gradient Boosted Tree that uses exponential loss function.
+You can learn more about GBM in this [video by Trevor Hastie](https://www.youtube.com/watch?v=wPqtzj5VZus&feature=youtu.be).
+
+---
+
+### Extreme Gradient Boosting
+
+GBT tries to approach this problem by adding some regularization parameters. We can:
+- control tree structure (maximum depth, minimum samples per leaf),
+- control learning rate (shrinkage),
+- reduce variance by introducing randomness (stochastic gradient boosting - using random subsamples of instances and features)
+
+But it could be improved even further. Enter XGBoost.
+
+> **XGBoost** (*extreme gradient boosting*) is a **more regularized** version of Gradient Boosted Trees.
+
+The main advantages:
+
+- good bias-variance (simple-predictive) trade-off "out of the box",
+- great computation speed,
+- package is evolving (author is willing to accept many PR from community)
+
+
+---
+
+### Objective function: training loss + regularization
+
+$$Obj(\Theta) = L(\Theta) + \Omega(\Theta)$$
+
+- `\(L(\Theta)\)` is training loss
+- `\(\Omega(\Theta)\)` is regularization
+
+For Boosting in `XGBoost`:
+
+$$Obj(\Theta) = \sum_i^n \ell (y_i - \hat{y}_i) + \Omega(\Theta)$$
+
+where `\( \Omega(f) = \gamma T + \frac{1}{2} \lambda \sum_{j=1}^T w_j^2 \)`
+
+First part `\(\gamma T\)` is responsible for controlling the overall number of created leaves,
+and the second term `\(\frac{1}{2} \lambda \sum_{j=1}^{T}w_j^2\)` watches over the their's scores.
+
+---
+
+### Install `XGBoost`
+
+Follow [installation page](http://xgboost.readthedocs.io/en/latest/build.html) to install `XGBoost`. For example, for Mac user, you can clone the repository and run as follows
+
+```bash
+git clone --recursive https://github.com/dmlc/xgboost
+cd xgboost; cp make/minimum.mk ./config.mk; make -j4
+```
+
+note that you might have to change `make/config.mk` line 46 to gcc-6 e.g. `gcc-5/g++-5` to `gcc-6/g++-6`
+
+```bash
+export CC = gcc-5
+export CXX = g++-5
+```
+
+Then to install for Python, change directory to Python and install using `setup.py`
+
+```bash
+cd python-package; sudo python setup.py install
+```
+
+---
+
+### Synthetic dataset
+
+Create dataset using `scikit-learn`
+
+```python
+from sklearn.datasets import make_classification
+seed = 104
+X, y = make_classification(n_samples=1000, n_features=20,
+                           n_informative=8, n_redundant=3,
+                           n_repeated=2, random_state=seed)
+```
+
+```python
+from sklearn.cross_validation import train_test_split
+X_train, X_test, y_train, y_test =
+  train_test_split(X, y, test_size=0.2, random_state=seed)
+```
+
+
+---
+
+### Decision Tree
+
+Train decision tree classifier on training set
+
+```python
+decision_tree = DecisionTreeClassifier(random_state=seed)
+decision_tree.fit(X_train, y_train)
+```
+
+Predict on testing set
+
+```python
+y_pred  = decision_tree.predict(X_test)
+y_pred_prob  = decision_tree.predict_proba(X_test)
+```
+
+Calculate log-loss
+
+```python
+accuracy = accuracy_score(y_test, y_pred_prob)
+logloss = log_loss(y_test, y_pred_prob)
+```
+
+See number of nodes created
+
+```python
+print(decision_tree.tree_.node_count)
+```
+
+---
+
+### Adaboost
+
+Using multiple tree in Adaboost
+
+```python
+adaboost = AdaBoostClassifier(
+    base_estimator=DecisionTreeClassifier(max_depth=1),
+    algorithm='SAMME',
+    n_estimators=1000,
+    random_state=seed)
+```
+
+```python
+adaboost.fit(X_train, y_train)
+y_pred = adaboost.predict(X_test)
+y_pred_prob = adaboost.predict_proba(X_test)
+```
+
+```python
+accuracy = accuracy_score(y_test, y_pred)
+logloss = log_loss(y_test, y_pred_prob)
+```
+
+---
+
+### Gradient Boosted Trees
+
+```python
+gbc = GradientBoostingClassifier(
+    max_depth=1,
+    n_estimators=1000,
+    warm_start=True,
+    random_state=seed)
+gbc.fit(X_train, y_train)
+```
+
+```python
+y_pred = gbc.predict(X_test)
+y_pred_prob = gbc.predict_proba(X_test)
+```
+
+```python
+accuracy = accuracy_score(y_test, y_pred)
+logloss = log_loss(y_test, y_pred_prob)
+```
+
+---
+
+### XGBoost cheat sheet
+
+```python
+model = xgb.train(params, dtrain, num_rounds)
+```
+
+where `params` is dictionary of parameters
+
+- `booster = [gbtree|gblinear]` - which booster to use.
+- `silent=[0|1]` - 0 prints running messages, 1 means silent mode
+- `eta=[0 .. 0.3 .. 1]` - step shrinkage used in update to prevents overfitting
+- `gamma=[0 .. ∞]` - minimum loss reduction required to make a further partition on a leaf node of the tree
+- `max_depth=[1 .. 6 .. ∞]` - maximum depth of each tree
+- `min_child_weight=[0 .. 1 .. ∞]` - minimum sum of instance weight needed in a tree node
+- `subsample=[0,1]` - subsample ratio of randomly selected training instances used to grow trees
+- `colsample_bytree=[0,1]` - subsample ratio of columns when construction each tree
+- `lambda=[1]` - L2 regularization term on weights
+- `alpha=[0]` - L1 regularization term on weights
+
+---
+
+### XGBoost cheat sheet (continue)
+
+```python
+model = xgb.train(params, dtrain, num_rounds)
+```
+
+```python
+objective=[
+  reg:linear # linear regression,
+  reg:logistic # logistic regression,
+  binary:logistic # logistic regression for binary classification, outputs probability,
+  binary:logitraw # logistic regression for binary classification, outputs score before logistic transformation,
+  count:poisson # poisson regression for count data, outputs mean of poisson distribution,
+  multi:softmax # do multiclass classification using softmax objective,
+  multi:softprob # same as above but outputs probability for each class,
+  rank:pairwise # execute ranking task by minimizing the pairwise loss
+]
+```
+
+- `base_score=[0.5]` - global bias. Initial prediction score for all instances
+- `eval_metric=[rmse|logloss|error|merror|mlogloss|auc|...]` - evaluation metric. Default value will be assigned based on the objective. There is possibility of having custom metric.
+seed=[0] - seed used for reproducibility
+
+---
+
+### Example usage of `XGBoost`
+
+load example from [here](https://archive.ics.uci.edu/ml/datasets/Mushroom)
+
+```python
+import xgboost as xgb
+dtrain = xgb.DMatrix('../data/agaricus.txt.train')
+dtest = xgb.DMatrix('../data/agaricus.txt.test')
+```
+
+```python
+params = {
+    'objective':'binary:logistic',
+    'max_depth':2,
+    'silent':1,
+    'eta':1
+}
+num_rounds = 5
+```
+
+```python
+bst = xgb.train(params, dtrain, num_rounds)
+```
+
+```python
+watchlist  = [(dtest,'test'), (dtrain,'train')] # native interface only
+bst = xgb.train(params, dtrain, num_rounds, watchlist)
+```
+
+```python
+preds_prob = bst.predict(dtest)
+```
+
+---
+
+### Example usage of `XGBoost` with Scikit-learn interface
+
+```python
+from xgboost.sklearn import XGBClassifier
+X_train, y_train, X_test, y_test =
+  load_svmlight_files(('../data/agaricus.txt.train', '../data/agaricus.txt.test'))
+```
+
+```python
+params = {
+    'objective': 'binary:logistic',
+    'max_depth': 2,
+    'learning_rate': 1.0,
+    'silent': 1.0,
+    'n_estimators': 5
+}
+
+bst = XGBClassifier(**params).fit(X_train, y_train)
+```
+
+```python
+preds = bst.predict(X_test)
+```
+---
+
+### Spotting most important features
+
+We can use _F-score_ metric
+
+> **F-score** - sums up how many times a split was performed on each feature.
+
+```python
+xgb.plot_importance(bst, importance_type='gain', xlabel='Gain')
+```
+
+```python
+xgb.plot_importance(bst)
+```
+
+```python
+importances = bst.get_fscore()
+```
+
+---
+
+### Bias and Variance
+
+<img src='images/bias-variance.png' width="400px"/>
+
+> **Bias error** is the overall difference between expected predictions made by the model and true values.
+>
+> **Variance error** describes how much predictions for the given point vary.
+
+---
+
+### Dealing with high variance
+
+If model is too complex try:
+
+- using less features (ie. feature selection),
+- using more training samples (ie. artificially generated),
+- increasing regularization (add penalties for extra complexity)
+
+In `XGBoost` you can try to:
+- reduce depth of each tree (`max_depth`),
+- increase `min_child_weight` parameter,
+- increase `gamma` parameter,
+- add more randomness using `subsample`, `colsample_bytree` parameters,
+- increase `lambda` and `alpha` regularization parameters
+
+---
+
+### Dealing with high bias
+
+If model is too simple:
+- add more features (ie. better feature engineering),
+- more sophisticated model
+- decrease regularization
+
+In `XGBoost` you can do it by:
+- increase depth of each tree (`max_depth`),
+- decrease `min_child_weight` parameter,
+- decrease `gamma` parameter,
+- decrease `lambda` and `alpha` regularization parameters
+
+---
+
+### Hyper-parameter tuning
+
+using `GridSearchCV` from scikit-learn
+
+```python
+from sklearn.cross_validation import StratifiedKFold
+from sklearn.grid_search import GridSearchCV, RandomizedSearchCV
+
+params_grid = {
+    'max_depth': [1, 2, 3],
+    'n_estimators': [5, 10, 25, 50],
+    'learning_rate': np.linspace(1e-16, 1, 3)
+}
+
+params_fixed = {
+    'objective': 'binary:logistic',
+    'silent': 1
+}
+cv = StratifiedKFold(y, n_folds=10, shuffle=True, random_state=seed)
+```
+
+```python
+bst_grid = GridSearchCV(
+    estimator=XGBClassifier(**params_fixed, seed=seed),
+    param_grid=params_grid,
+    cv=cv,
+    scoring='accuracy'
+)
+bst_grid.fit(X, y)
+```
+
+---
+
+### Grid search score
+
+```python
+bst_grid.grid_scores_
+```
+
+This will print scores as follows,
+
+```python
+[mean: 0.80200, std: 0.02403, params: {'subsample': 0.11676744056370758,
+'n_estimators': 492, 'gamma': 0, 'colsample_bytree': 0.065034396841929132,
+'learning_rate': 0.82231421953113004, 'max_depth': 3},
+
+ mean: 0.90800, std: 0.02534, params: {'subsample': 0.4325346125891868,
+ 'n_estimators': 689, 'gamma': 1, 'colsample_bytree': 0.11848249237448605,
+ 'learning_rate': 0.13214054942810016, 'max_depth': 1},
+
+ ...]
+```
+
+We can get the best estimator by accessing `best_params_`
+
+```python
+bst_grid.best_params_
+```
+
+---
+
+### Randomized Grid-Search
+
+```python
+params_dist_grid = {
+    'max_depth': [1, 2, 3, 4],
+    'gamma': [0, 0.5, 1],
+    'n_estimators': randint(1, 1001), # uniform discrete random distribution
+    'learning_rate': uniform(), # gaussian distribution
+    'subsample': uniform(), # gaussian distribution
+    'colsample_bytree': uniform() # gaussian distribution
+}
+```
+
+```python
+rs_grid = RandomizedSearchCV(
+    estimator=XGBClassifier(**params_fixed, seed=seed),
+    param_distributions=params_dist_grid,
+    n_iter=10,
+    cv=cv,
+    scoring='accuracy',
+    random_state=seed
+)
+rs_grid.fit(X, y)
+```
+
+Access parameters created
+```python
+rs_grid.grid_scores_
+rs_grid.best_estimator_
+rs_grid.best_params_
+rs_grid.best_score_
+```
+
+---
+
+### Evaluate results
+
+- evaluation metrics (`rmse`, `mae`, `logloss`, `error`, `merror`, `auc`, ...)
+
+```python
+params['eval_metric'] = 'logloss'
+params['eval_metric'] = ['logloss', 'auc']
+```
+
+- early stopping can be state before training `early_stopping_rounds=10`
+
+### Missing values
+
+Just state when creating dataset
+
+```python
+dtrain_m = xgb.DMatrix(data_m, label=label, missing=np.nan)
+```
+
+---
+
+### Imbalanced datasets
+
+create imbalance dataset and test accuracy, precision, recall
+
+```python
+X, y = make_classification(
+    n_samples=200,
+    n_features=5,
+    n_informative=3,
+    n_classes=2,
+    weights=[.9, .1],
+    shuffle=True,
+    random_state=seed
+)
+```
+
+This can be stated in parameter dictionary i.e.
+
+```python
+ratio = float(np.sum(train_labels == 0)) / np.sum(train_labels == 1)
+params['scale_pos_weight'] = ratio
+```
+
+---
+
+    </textarea>
+    <script src="https://gnab.github.io/remark/downloads/remark-latest.min.js"></script>
+    <script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML&delayStartupUntil=configured" type="text/javascript"></script>
+    <script>
+      var slideshow = remark.create({
+        ratio: '4:3',
+         navigation: {
+           scroll: false,
+           touch: true,
+           click: false
+        }
+      });
+
+      // Setup MathJax
+      MathJax.Hub.Config({
+          tex2jax: {
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+          }
+      });
+      MathJax.Hub.Queue(function() {
+          $(MathJax.Hub.getAllJax()).map(function(index, elem) {
+              return(elem.SourceElement());
+          }).parent().addClass('has-jax');
+      });
+
+      MathJax.Hub.Configured();
+    </script>
+  </body>
+</html>
