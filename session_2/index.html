@@ -28,22 +28,36 @@ class: center, middle
 
 basics and programming of `XGBoost` in Python
 
+_Titipat Achakulvisut_, October 25th, 2016
+
 credit [Practical XGBoost in Python](http://education.parrotprediction.teachable.com/p/practical-xgboost-in-python)
 by [Norbert Kozlowski](https://github.com/khozzy)
 
 ---
 
-### Introduction
+### Outline
 
-`XGBoost` is short for “Extreme Gradient Boosting”. The term “Gradient Boosting”
-is proposed in the paper Greedy Function Approximation: A Gradient Boosting Machine, by Friedman.
-Author of `XGBoost` is Tianqi Chen from University of Washington. You can see his
-slide [here](http://homes.cs.washington.edu/~tqchen/pdf/BoostedTree.pdf).
+- History and basic of the algorithm
+- Practical use of `XGBoost`
+- Parameters optimization
 
-#### Reference
+### References
 
 - [Introduction to Boosted Trees](http://xgboost.readthedocs.io/en/latest/model.html)
 - [Practical XGBoost in Python](http://education.parrotprediction.teachable.com/p/practical-xgboost-in-python)
+
+---
+
+### History: Model Averaging
+
+- _Bagging (Breiman, 1996)_: fit many large trees to bootstrap-resampled versions
+of the training data, and classify by majority vote. Bagging averages many trees
+and produce _smoother_ decision boundary
+- _Boosting (Freund and Shapire, 1996)_: Fit large or small trees to reweighted version
+of training data and classify by majority vote
+- _Random forests_: fancier version of bagging
+
+In general: _Boosting_ > _Random forest_ > _Bagging_ > _Single tree_
 
 
 ---
@@ -132,7 +146,7 @@ The main advantages:
 - good bias-variance (simple-predictive) trade-off "out of the box",
 - great computation speed,
 - package is evolving (author is willing to accept many PR from community)
-
+- It was develop by Tianqi Chen in C++ but also enables interfaces for Python, R, Julia.
 
 ---
 
@@ -173,7 +187,8 @@ export CXX = g++-5
 Then to install for Python, change directory to Python and install using `setup.py`
 
 ```bash
-cd python-package; sudo python setup.py install
+cd python-package
+sudo python setup.py install
 ```
 
 ---
@@ -190,12 +205,13 @@ X, y = make_classification(n_samples=1000, n_features=20,
                            n_repeated=2, random_state=seed)
 ```
 
+Split training-testing using `train_test_split`
+
 ```python
 from sklearn.cross_validation import train_test_split
 X_train, X_test, y_train, y_test =
   train_test_split(X, y, test_size=0.2, random_state=seed)
 ```
-
 
 ---
 
@@ -204,6 +220,7 @@ X_train, X_test, y_train, y_test =
 Train decision tree classifier on training set
 
 ```python
+from sklearn.tree import DecisionTreeClassifier
 decision_tree = DecisionTreeClassifier(random_state=seed)
 decision_tree.fit(X_train, y_train)
 ```
@@ -235,6 +252,7 @@ print(decision_tree.tree_.node_count)
 Using multiple tree in Adaboost
 
 ```python
+from sklearn.ensemble import AdaBoostClassifier
 adaboost = AdaBoostClassifier(
     base_estimator=DecisionTreeClassifier(max_depth=1),
     algorithm='SAMME',
@@ -258,6 +276,8 @@ logloss = log_loss(y_test, y_pred_prob)
 ### Gradient Boosted Trees
 
 ```python
+from sklearn.ensemble import GradientBoostingClassifier
+
 gbc = GradientBoostingClassifier(
     max_depth=1,
     n_estimators=1000,
@@ -305,17 +325,16 @@ where `params` is dictionary of parameters
 model = xgb.train(params, dtrain, num_rounds)
 ```
 
+- `objective`
 ```python
-objective=[
-  reg:linear # linear regression,
-  reg:logistic # logistic regression,
-  binary:logistic # logistic regression for binary classification, outputs probability,
-  binary:logitraw # logistic regression for binary classification, outputs score before logistic transformation,
-  count:poisson # poisson regression for count data, outputs mean of poisson distribution,
-  multi:softmax # do multiclass classification using softmax objective,
-  multi:softprob # same as above but outputs probability for each class,
-  rank:pairwise # execute ranking task by minimizing the pairwise loss
-]
+  > reg:linear # linear regression,
+  > reg:logistic # logistic regression,
+  > binary:logistic # logistic regression for binary classification, outputs probability,
+  > binary:logitraw # logistic regression for binary classification, outputs score before logistic transformation,
+  > count:poisson # poisson regression for count data, outputs mean of poisson distribution,
+  > multi:softmax # do multiclass classification using softmax objective,
+  > multi:softprob # same as above but outputs probability for each class,
+  > rank:pairwise # execute ranking task by minimizing the pairwise loss
 ```
 
 - `base_score=[0.5]` - global bias. Initial prediction score for all instances
@@ -326,7 +345,7 @@ seed=[0] - seed used for reproducibility
 
 ### Example usage of `XGBoost`
 
-load example from [here](https://archive.ics.uci.edu/ml/datasets/Mushroom)
+load example dataset from [here](https://archive.ics.uci.edu/ml/datasets/Mushroom)
 
 ```python
 import xgboost as xgb
@@ -361,11 +380,15 @@ preds_prob = bst.predict(dtest)
 
 ### Example usage of `XGBoost` with Scikit-learn interface
 
+the library also provide scikit-learn friendly interface to use
+
 ```python
 from xgboost.sklearn import XGBClassifier
 X_train, y_train, X_test, y_test =
   load_svmlight_files(('../data/agaricus.txt.train', '../data/agaricus.txt.test'))
 ```
+
+Again, we can put parameters in dictionary format
 
 ```python
 params = {
@@ -378,6 +401,8 @@ params = {
 
 bst = XGBClassifier(**params).fit(X_train, y_train)
 ```
+
+Using `predict` method to predict output classes
 
 ```python
 preds = bst.predict(X_test)
@@ -587,6 +612,10 @@ params['scale_pos_weight'] = ratio
 ```
 
 ---
+
+class: center, middle
+
+## Questions and discussion
 
     </textarea>
     <script src="https://gnab.github.io/remark/downloads/remark-latest.min.js"></script>
