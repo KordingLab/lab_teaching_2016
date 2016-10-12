@@ -7,15 +7,18 @@
 
       @import url(https://fonts.googleapis.com/css?family=Droid+Serif:400,700,400italic);
       @import url(https://fonts.googleapis.com/css?family=Ubuntu+Mono:400,700,400italic);
-      @import url(https://fonts.googleapis.com/css?family=Hind|Abel:400,700);
-      body { font-family: 'Abel'; }
+      @import url(https://fonts.googleapis.com/css?family=Source+Sans+Pro|Bungee+Inline|Scope+One);
+      body { font-family: 'Source Sans Pro'; }
       h1, h2, h3, h4 {
-        font-family: 'Abel';
+        font-family: 'Bungee Inline', 'Source Sans Pro';
         font-weight: normal;
         color: red;
       }
       .remark-code, .remark-inline-code {
         font-family: 'Ubuntu Mono';
+      }
+      a:link {
+        text-decoration: none;
       }
     </style>
   </head>
@@ -24,41 +27,36 @@
 
 class: center, middle
 
-# Introduction to `XGBoost`
+# Introduction to XGBoost
 
 basics and programming of `XGBoost` in Python
 
-_Titipat Achakulvisut_, October 25th, 2016
+by _Titipat Achakulvisut_
 
-credit [Practical XGBoost in Python](http://education.parrotprediction.teachable.com/p/practical-xgboost-in-python)
+**credit** [Practical XGBoost in Python](http://education.parrotprediction.teachable.com/p/practical-xgboost-in-python)
 by [Norbert Kozlowski](https://github.com/khozzy)
 
 ---
 
-### Outline
-
-- History and basic of the algorithm
-- Practical use of `XGBoost`
-- Parameters optimization
-
-### References
+### Reference
 
 - [Introduction to Boosted Trees](http://xgboost.readthedocs.io/en/latest/model.html)
 - [Practical XGBoost in Python](http://education.parrotprediction.teachable.com/p/practical-xgboost-in-python)
+- [Gradient Boosting Machine by Trevor Hastie](https://www.youtube.com/watch?v=wPqtzj5VZus)
 
 ---
 
-### History: Model Averaging
+### History of Model Averaging
 
-- _Bagging (Breiman, 1996)_: fit many large trees to bootstrap-resampled versions
-of the training data, and classify by majority vote. Bagging averages many trees
-and produce _smoother_ decision boundary
-- _Boosting (Freund and Shapire, 1996)_: Fit large or small trees to reweighted version
-of training data and classify by majority vote
-- _Random forests_: fancier version of bagging
+cr. Trevor Hastie
 
-In general: _Boosting_ > _Random forest_ > _Bagging_ > _Single tree_
+- **Bagging (Breiman, 1996)**: fit many large trees to boostrap-resampled
+versions of training data, and classify by majority vote.
+- **Boosting (Freund and Shapire, 1996)**: fit many large or small tree to
+reweighted versions of the training data. Classify by weighted majority vote.
+- **Random Forests (Breiman, 1999)**: fancier version of bagging
 
+In general _Boosting_ > _Random Forest_ > _Bagging_ > _Single Tree_
 
 ---
 
@@ -146,7 +144,7 @@ The main advantages:
 - good bias-variance (simple-predictive) trade-off "out of the box",
 - great computation speed,
 - package is evolving (author is willing to accept many PR from community)
-- It was develop by Tianqi Chen in C++ but also enables interfaces for Python, R, Julia.
+
 
 ---
 
@@ -168,7 +166,7 @@ and the second term `\(\frac{1}{2} \lambda \sum_{j=1}^{T}w_j^2\)` watches over t
 
 ---
 
-### Install `XGBoost`
+### Install XGBoost
 
 Follow [installation page](http://xgboost.readthedocs.io/en/latest/build.html) to install `XGBoost`. For example, for Mac user, you can clone the repository and run as follows
 
@@ -193,7 +191,7 @@ sudo python setup.py install
 
 ---
 
-### Synthetic dataset
+### Genearte synthetic dataset
 
 Create dataset using `scikit-learn`
 
@@ -205,13 +203,12 @@ X, y = make_classification(n_samples=1000, n_features=20,
                            n_repeated=2, random_state=seed)
 ```
 
-Split training-testing using `train_test_split`
-
 ```python
 from sklearn.cross_validation import train_test_split
 X_train, X_test, y_train, y_test =
   train_test_split(X, y, test_size=0.2, random_state=seed)
 ```
+
 
 ---
 
@@ -220,7 +217,6 @@ X_train, X_test, y_train, y_test =
 Train decision tree classifier on training set
 
 ```python
-from sklearn.tree import DecisionTreeClassifier
 decision_tree = DecisionTreeClassifier(random_state=seed)
 decision_tree.fit(X_train, y_train)
 ```
@@ -247,12 +243,30 @@ print(decision_tree.tree_.node_count)
 
 ---
 
+### Visualize decision tree
+
+```python
+import os
+from sklearn.tree import export_graphviz
+dot_file = os.path.join(os.getcwd(), 'tree.dot')
+export_graphviz(decision_tree, out_file=dot_file)
+```
+
+```bash
+brew install graphviz # install using brew
+dot -Tpng tree.dot -o tree.png # transform dot to png to visualize
+```
+
+<img src='images/tree.png' width="1000px"/>
+
+
+---
+
 ### Adaboost
 
 Using multiple tree in Adaboost
 
 ```python
-from sklearn.ensemble import AdaBoostClassifier
 adaboost = AdaBoostClassifier(
     base_estimator=DecisionTreeClassifier(max_depth=1),
     algorithm='SAMME',
@@ -276,8 +290,6 @@ logloss = log_loss(y_test, y_pred_prob)
 ### Gradient Boosted Trees
 
 ```python
-from sklearn.ensemble import GradientBoostingClassifier
-
 gbc = GradientBoostingClassifier(
     max_depth=1,
     n_estimators=1000,
@@ -304,7 +316,7 @@ logloss = log_loss(y_test, y_pred_prob)
 model = xgb.train(params, dtrain, num_rounds)
 ```
 
-where `params` is dictionary of parameters
+where `params` is dictionary of parameters with following keys
 
 - `booster = [gbtree|gblinear]` - which booster to use.
 - `silent=[0|1]` - 0 prints running messages, 1 means silent mode
@@ -326,15 +338,16 @@ model = xgb.train(params, dtrain, num_rounds)
 ```
 
 - `objective`
+
 ```python
-  > reg:linear # linear regression,
-  > reg:logistic # logistic regression,
-  > binary:logistic # logistic regression for binary classification, outputs probability,
-  > binary:logitraw # logistic regression for binary classification, outputs score before logistic transformation,
-  > count:poisson # poisson regression for count data, outputs mean of poisson distribution,
-  > multi:softmax # do multiclass classification using softmax objective,
-  > multi:softprob # same as above but outputs probability for each class,
-  > rank:pairwise # execute ranking task by minimizing the pairwise loss
+  reg:linear # linear regression,
+  reg:logistic # logistic regression,
+  binary:logistic # logistic regression for binary classification, outputs probability,
+  binary:logitraw # logistic regression for binary classification, outputs score before logistic transformation,
+  count:poisson # poisson regression for count data, outputs mean of poisson distribution,
+  multi:softmax # do multiclass classification using softmax objective,
+  multi:softprob # same as above but outputs probability for each class,
+  rank:pairwise # execute ranking task by minimizing the pairwise loss
 ```
 
 - `base_score=[0.5]` - global bias. Initial prediction score for all instances
@@ -343,9 +356,9 @@ seed=[0] - seed used for reproducibility
 
 ---
 
-### Example usage of `XGBoost`
+### Example usage of XGBoost
 
-load example dataset from [here](https://archive.ics.uci.edu/ml/datasets/Mushroom)
+load example data from [here](https://archive.ics.uci.edu/ml/datasets/Mushroom)
 
 ```python
 import xgboost as xgb
@@ -378,17 +391,13 @@ preds_prob = bst.predict(dtest)
 
 ---
 
-### Example usage of `XGBoost` with Scikit-learn interface
-
-the library also provide scikit-learn friendly interface to use
+### Example usage of XGBoost with Scikit-learn interface
 
 ```python
 from xgboost.sklearn import XGBClassifier
 X_train, y_train, X_test, y_test =
   load_svmlight_files(('../data/agaricus.txt.train', '../data/agaricus.txt.test'))
 ```
-
-Again, we can put parameters in dictionary format
 
 ```python
 params = {
@@ -401,8 +410,6 @@ params = {
 
 bst = XGBClassifier(**params).fit(X_train, y_train)
 ```
-
-Using `predict` method to predict output classes
 
 ```python
 preds = bst.predict(X_test)
@@ -424,7 +431,7 @@ xgb.plot_importance(bst)
 ```
 
 ```python
-importances = bst.get_fscore()
+importances = bst.get_fscore() # return dictionary of f-score
 ```
 
 ---
@@ -483,7 +490,7 @@ params_grid = {
     'max_depth': [1, 2, 3],
     'n_estimators': [5, 10, 25, 50],
     'learning_rate': np.linspace(1e-16, 1, 3)
-}
+} # 3 * 4 * 3 total grid size
 
 params_fixed = {
     'objective': 'binary:logistic',
@@ -532,7 +539,10 @@ bst_grid.best_params_
 
 ---
 
-### Randomized Grid-Search
+### Randomized Grid Search
+
+Sometimes the grid space is large, we can use randomize search
+to find grid parameters
 
 ```python
 params_dist_grid = {
@@ -557,9 +567,8 @@ rs_grid = RandomizedSearchCV(
 rs_grid.fit(X, y)
 ```
 
-Access parameters created
 ```python
-rs_grid.grid_scores_
+rs_grid.grid_scores_ # all grid scores
 rs_grid.best_estimator_
 rs_grid.best_params_
 rs_grid.best_score_
@@ -615,7 +624,7 @@ params['scale_pos_weight'] = ratio
 
 class: center, middle
 
-## Questions and discussion
+# Questions and Discussion
 
     </textarea>
     <script src="https://gnab.github.io/remark/downloads/remark-latest.min.js"></script>
