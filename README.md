@@ -9,12 +9,21 @@ Feel free to update or pull request!
 
 ## Edit page
 
-This is [`gh-pages`](https://github.com/KordingLab/lab_teaching_2016/tree/gh-pages) branch for Kording lab teaching 2016. This page will show up at [kordinglab.com/lab_teaching_2016](http://kordinglab.com/lab_teaching_2016/).
+You can edit page on [`gh-pages`](https://github.com/KordingLab/lab_teaching_2016/tree/gh-pages)
+branch for Kording lab teaching 2016. This page will show up at [kordinglab.com/lab_teaching_2016](http://kordinglab.com/lab_teaching_2016/).
 
 To add slide, for example [`remarkjs`](https://github.com/gnab/remark),
 you can put slide (which is `index.html`) to new folder e.g. `session_2`.
 Then custom `_data/project.yml` to add information of the talk so that others can
 access the slides online from [kordinglab.com/lab_teaching_2016](http://kordinglab.com/lab_teaching_2016/).
+
+Each talk can be added into `_data/project.yml` in the format as follows
+
+```
+- name: "Oct 25th, Introduction on XGBoost"
+  link: session_2
+  description: "Introduction on XGBoost (extreme gradient boosting) and example code in Python by Titipat"
+```
 
 
 ## Teaching and talks
