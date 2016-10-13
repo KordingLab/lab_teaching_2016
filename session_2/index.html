@@ -203,6 +203,8 @@ X, y = make_classification(n_samples=1000, n_features=20,
                            n_repeated=2, random_state=seed)
 ```
 
+Split training-testing set
+
 ```python
 from sklearn.cross_validation import train_test_split
 X_train, X_test, y_train, y_test =
@@ -214,7 +216,7 @@ X_train, X_test, y_train, y_test =
 
 ### Decision Tree
 
-Train decision tree classifier on training set
+Create and train decision tree classifier on training set
 
 ```python
 decision_tree = DecisionTreeClassifier(random_state=seed)
@@ -245,6 +247,8 @@ print(decision_tree.tree_.node_count)
 
 ### Visualize decision tree
 
+We can use `export_graphviz` to visualize dot file
+
 ```python
 import os
 from sklearn.tree import export_graphviz
@@ -264,9 +268,10 @@ dot -Tpng tree.dot -o tree.png # transform dot to png to visualize
 
 ### Adaboost
 
-Using multiple tree in Adaboost
+Using multiple tree in Adaboost. This tree is called "stumped tree"
 
 ```python
+from sklearn.ensemble import AdaBoostClassifier
 adaboost = AdaBoostClassifier(
     base_estimator=DecisionTreeClassifier(max_depth=1),
     algorithm='SAMME',
@@ -289,7 +294,10 @@ logloss = log_loss(y_test, y_pred_prob)
 
 ### Gradient Boosted Trees
 
+Trying the same stump tree on `GradientBoostingClassifier`
+
 ```python
+from sklearn.ensemble import GradientBoostingClassifier
 gbc = GradientBoostingClassifier(
     max_depth=1,
     n_estimators=1000,
@@ -362,8 +370,8 @@ load example data from [here](https://archive.ics.uci.edu/ml/datasets/Mushroom)
 
 ```python
 import xgboost as xgb
-dtrain = xgb.DMatrix('../data/agaricus.txt.train')
-dtest = xgb.DMatrix('../data/agaricus.txt.test')
+dtrain = xgb.DMatrix('data/agaricus.txt.train')
+dtest = xgb.DMatrix('data/agaricus.txt.test')
 ```
 
 ```python
@@ -613,7 +621,16 @@ X, y = make_classification(
 )
 ```
 
-This can be stated in parameter dictionary i.e.
+We can set weight to each training set
+
+```python
+weights = np.zeros(len(y_train))
+weights[y_train == 0] = 1
+weights[y_train == 1] = 5
+dtrain = xgb.DMatrix(X_train, label=y_train, weight=weights)
+```
+
+Moreover, this can be stated in parameter `scale_pos_weight` in dictionary i.e.
 
 ```python
 ratio = float(np.sum(train_labels == 0)) / np.sum(train_labels == 1)
