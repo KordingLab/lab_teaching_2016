@@ -53,15 +53,39 @@ by [Norbert Kozlowski](https://github.com/khozzy)
 
 ### History of Model Averaging
 
-cr. Trevor Hastie
+Sometimes called Ensemble of Learners.
+
+- `\( \hat{y}_1  = f_1(x_1, x_2, ...)\)`
+- `\( \hat{y}_2  = f_2(x_1, x_2, ...)\)`
+- `\( ... \)`
+
+Then  `\( \hat{y}_e  = sign(\sum \alpha_i \hat{y}_i) \)`
+where `\( \alpha_i (x) \)` indicates expertise
 
 - **Bagging (Breiman, 1996)**: fit many large trees to boostrap-resampled
 versions of training data, and classify by majority vote.
 - **Boosting (Freund and Shapire, 1996)**: fit many large or small tree to
 reweighted versions of the training data. Classify by weighted majority vote.
-- **Random Forests (Breiman, 1999)**: fancier version of bagging
+- **Random Forests (Breiman, 1999)**: fancier version of bagging, take `\( n = \sqrt{m} \)`
+features when growing the tree
 
 In general _Boosting_ > _Random Forest_ > _Bagging_ > _Single Tree_
+
+---
+
+### Bagging
+
+- Stands for boostrap aggregation
+- Learn many classifiers, each with only part of the data (sample `N'` from `N`)
+- Combine through model averaging (reduce overfitting by sample, reduce variance
+by averaging)
+
+repeat K times
+1. Draw `N' < N` examples
+2. Train the classifier
+3. Test
+  - for classifier: take majority votes
+  - for regression: take average
 
 ---
 
@@ -74,6 +98,25 @@ Classify final examples by majority voting.
 When using boosting techinque all instance in dataset are assigned a score that
 tells _how difficult to classify_ they are. In each following iteration the algorithm
 pays more attention (assign bigger weights) to instances that were wrongly classified previously.
+
+<img src='images/adaboost.jpg' width="800px"/>
+
+---
+
+### AdaBoost (Adaptive Boosting)
+
+Assume that the number of training samples is denoted by `\(N\)`, and the number of iterations (created trees) is `\(M\)`.
+Notice that possible class outputs are `\(Y=\{-1,1\}\)`
+
+1. Initialize the observation weights `\(w_i=\frac{1}{N}\)` where `\(i = 1,2, \dots, N \)`
+2. For `\(m=1\)` to `\(M\)`:
+    - fit a classifier `\(G_m(x)\)` to the training data using weights `\(w_i\)`,
+    - compute `\(err_m = \frac{\sum_{i=1}^{N} w_i I (y_i \neq G_m(x))}{\sum_{i=1}^{N}w_i}\)`,
+    - compute `\(\alpha_m = \log ((1-err_m)/err_m)\)`,
+    - set `\(w_i \leftarrow w_i \cdot \exp [\alpha_m \cdot I (y_i \neq G_m(x)]\)`, where `\(i = 1,2, \dots, N\)`
+3. Output `\(G_m(x) = sign [\sum_{m=1}^{M} \alpha_m G_m(x)]\)`
+
+<img src='images/adaboost.jpg' width="800px"/>
 
 ---
 
@@ -98,44 +141,25 @@ trees (where each one is solving the same problem)
 
 ---
 
-### AdaBoost (Adaptive Boosting)
-
-The implementation of boosting technique using decision tress (it's a *meta-estimator*
-which means you can fit any classifier in). The intuitive recipie is presented below:
-
-**Algorithm:**
-
-Assume that the number of training samples is denoted by `\(N\)`, and the number of iterations (created trees) is `\(M\)`.
-Notice that possible class outputs are `\(Y=\{-1,1\}\)`
-
-1. Initialize the observation weights `\(w_i=\frac{1}{N}\)` where `\(i = 1,2, \dots, N \)`
-2. For `\(m=1\)` to `\(M\)`:
-    - fit a classifier `\(G_m(x)\)` to the training data using weights `\(w_i\)`,
-    - compute `\(err_m = \frac{\sum_{i=1}^{N} w_i I (y_i \neq G_m(x))}{\sum_{i=1}^{N}w_i}\)`,
-    - compute `\(\alpha_m = \log ((1-err_m)/err_m)\)`,
-    - set `\(w_i \leftarrow w_i \cdot \exp [\alpha_m \cdot I (y_i \neq G_m(x)]\)`, where `\(i = 1,2, \dots, N\)`
-3. Output `\(G_m(x) = sign [\sum_{m=1}^{M} \alpha_m G_m(x)]\)`
-
----
-
 ### Generalized Boosted Models (GBM)
 
-We can take advantage of the fact that the loss function can be represented with
-a form suitable for optimalization (due to the stage-wise additivity). This creates
-a class of general boosting algorithms named simply **generalized boosted model (GBM)**.
+- Example: Gradient Boosted Tree, AdaBoost, Extreme Gradient Boosting (XGBoost)
+- The boosting paradigm can be extended to general loss function (regression, K-class classification)
 
-An example of a GBM is **Gradient Boosted Tree** which uses decision tree as an estimator.
-It can work with different loss functions (regression, classification, risk modeling etc.),
-evaluate it's  gradient and approximates it with a simple tree (stage-wisely, that minimizes the overall error).
+1. Initilize `\(F_0 (x) = 0 \)`
+2. For `\( m = 1 \)` to `\( M \)`:
+  - Compute `\( (\beta_m, \gamma_m) = \arg\min_{\beta, \gamma} \sum_{i=1}^{N} L(y_i, F_{m-1} (x_i) + \beta b(x_i; \gamma)) \)`
+  - Set `\( F_m (x) = F_{m-1} (x) + \epsilon \beta_m b(x; \gamma_m) \)`
 
-AdaBoost is a special case of Gradient Boosted Tree that uses exponential loss function.
+Where `\( \epsilon \)` is a shrinkage factor. This is stage-wise update algorithm.
 You can learn more about GBM in this [video by Trevor Hastie](https://www.youtube.com/watch?v=wPqtzj5VZus&feature=youtu.be).
 
 ---
 
 ### Extreme Gradient Boosting
 
-GBT tries to approach this problem by adding some regularization parameters. We can:
+Gradient Boosted Tree tries to approach by adding some regularization parameters. We can:
+
 - control tree structure (maximum depth, minimum samples per leaf),
 - control learning rate (shrinkage),
 - reduce variance by introducing randomness (stochastic gradient boosting - using random subsamples of instances and features)
@@ -144,7 +168,7 @@ But it could be improved even further. Enter XGBoost.
 
 > **XGBoost** (*extreme gradient boosting*) is a **more regularized** version of Gradient Boosted Trees.
 
-The main advantages:
+The main advantages of `XGBoost`:
 
 - good bias-variance (simple-predictive) trade-off "out of the box",
 - great computation speed,
