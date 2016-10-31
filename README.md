@@ -44,7 +44,9 @@ Parameters in `XGBoost` and basic usage of `XGBoost`.
 
 ### Session 3
 
-[Ravi Garg](http://kordinglab.com/people/ravi_garg/index.html), Tutorial on [Docker](https://www.docker.com/) on November 1st 3-4 PM, containers that  wrap a piece of software in an environment.
+[Eva Dyer](http://kordinglab.com/people/eva_dyer/index.html) will give her practice her
+neurosciency talk for Machine learning audience and then talk about challenges in
+neural data analysis. This will happen on November 1st at 1.30 PM
 
 
 ### Session 4
@@ -65,4 +67,4 @@ Plus some coding example on how to apply these optimization.
 
 ### Session 6
 
-TBD
+[Ravi Garg](http://kordinglab.com/people/ravi_garg/index.html), Tutorial on [Docker](https://www.docker.com/) on November 22nd 3-4 PM, containers that  wrap a piece of software in an environment.
