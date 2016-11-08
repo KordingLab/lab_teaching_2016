@@ -31,57 +31,53 @@ class: center, middle
 
 by _Roozbeh Farhoodi_
 
-at klab weekly meeting
+**download tutorial:**
 
+[Github repository](https://github.com/KordingLab/lab_teaching_2016)
 
----
-
-### Download tutorial
-
-- [Github repository](https://github.com/KordingLab/lab_teaching_2016)
-- [IPython notebook](http://nbviewer.jupyter.org/github/KordingLab/lab_teaching_2016/blob/master/session_2/xgboost_tutorials.ipynb)
+[IPython notebook](https://github.com/KordingLab/lab_teaching_2016/blob/master/session_4/Generative%20Adversarial%20Networks.ipynb)
 
 ---
 ### Generative models
-“Generative modeling” is a broad area of machine learning which deals with
+“Generative modeling is a broad area of machine learning which deals with
 models of distributions `\(\mathbb{P}(X)\)`, defined over datapoints X in some potentially
-high-dimensional space `\(\Theta\)`
-
+high-dimensional space `\(\Theta\)`."
 ### Motivations
-- New samples from a dataset: generating natural images
+- New samples from a dataset: generating natural images, ...
 - completing the incomplete data
+
+.center[<img src='images/completion.gif' width="250px"/>]
 
 ---
 ### variational autoencoder (VAE)
-[more](https://arxiv.org/pdf/1606.05908v2.pdf)
+.center[<img src='images/vae.png' width="700px"/>]
+[tutorial](https://arxiv.org/pdf/1606.05908v2.pdf)
+
 ---
 ### GAN
-
 [Goodfellow et al, 2014](https://arxiv.org/pdf/1406.2661v1.pdf)
-.center[<img src='images/gan.jpg' width="200px"/>]
+
 `\(D\)` and `\(G\)` play the following two-player minimax game with value function `\(V(G, D)\)`:
 
 `\(\min_G \max_D V(D, G) = \mathbb{E}_{x \sim p_{\text{data}}({x})}[\log D({x})] + \mathbb{E}_{{z} \sim p_{{z}}({z})}[\log (1 - D(G({z})))]\)`
 
+.center[<img src='images/gan.jpg' width="260px"/>]
+---
+### GAN
+[Goodfellow et al, 2014](https://arxiv.org/pdf/1406.2661v1.pdf)
+
+`\(D\)` and `\(G\)` play the following two-player minimax game with value function `\(V(G, D)\)`:
+
+`\(\min_G \max_D V(D, G) = \mathbb{E}_{x \sim p_{\text{data}}({x})}[\log D({x})] + \mathbb{E}_{{z} \sim p_{{z}}({z})}[\log (1 - D(G({z})))]\)`
+
+.center[<img src='images/gan-demo.jpg' width="450px"/>]
 ---
 
 ### Example
 
 .left[<img src='images/fig1.pdf' width="170px"/> <img src='images/fig2.pdf' width="170px"/><img src='images/fig3.pdf' width="170px"/><img src='images/fig4.pdf' width="170px"/>]
 
-The lower horizontal line is the domain from which z is sampled.
-The horizontal line above is part of the domain of x.
-The upward arrows show how the mapping x = G(z) imposes the non-uniform distribution `\(p_g\)` on
-transformed samples. G contracts in regions of high density and expands in regions of low density of pg. (a)
-Consider an adversarial pair near convergence: pg is similar to pdata and D is a partially accurate classifier.
-(b) In the inner loop of the algorithm D is trained to discriminate samples from data, converging to D(x) =
-pdata(x)
-pdata(x)+pg(x)
-. (c) After an update to G, gradient of D has guided G(z) to flow to regions that are more likely
-to be classified as data. (d) After several steps of training, if G and D have enough capacity, they will reach a
-point at which both cannot improve because pg = pdata. The discriminator is unable to differentiate between
-the two distributions, i.e. D(x) = 1/2
-.
+.left[<img src='images/gan-describe.jpg' width="670px"/>]
 ---
 .center[**Generative and Discriminative**]
 .center[<img src='images/twogames.png' width="550px"/>]
@@ -93,7 +89,7 @@ the two distributions, i.e. D(x) = 1/2
 - InfoGAN
 - AC-GAN
 - EB-GAN
-- ...
+- LAPGAN...
 ---
 ## DC-GAN
 [**Alec Radford and Luke Metz et al, 2016**](https://arxiv.org/pdf/1511.06434.pdf)
@@ -130,12 +126,51 @@ Which can be approximated again by Monte Carlo simulations.
 .center[<img src='images/infoGAN.jpg' width="550px"/>]
 
 ---
+## Info-GAN
+.center[<img src='images/infogan3.jpg' width="650px"/>]
+
+---
+## LAPGAN
+[**Emily Denton et al, 2015**](https://arxiv.org/pdf/1506.05751.pdf)
+"Our approach uses a cascade of convolutional
+networks within a Laplacian pyramid framework to generate images in
+a coarse-to-fine fashion."
+
+---
+## LAPGAN
+.center[<img src='images/lapgan1.jpg' width="750px"/>]
+---
+## LAPGAN
+.center[<img src='images/lapgan2.jpg' width="750px"/>]
+---
 ## AC-GAN
 [**Augustus Odena et al, 2016**](https://arxiv.org/pdf/1610.09585v1.pdf)
 "GANs struggle to generate globally coherent, high resolution samples - particularly from datasets with high variability."
+
+.center[<img src='images/acgan1.jpg' width="800px"/>]
 ---
+## AC-GAN
+
+.center[<img src='images/acgan2.jpg' width="800px"/>]
+---
+
 ## EBGAN
 [**Junbo Zhao et al, 2016**](https://arxiv.org/pdf/1609.03126v2.pdf)
+"We introduce the “Energy-based Generative Adversarial Network” model
+(EBGAN) which views the discriminator as an energy function that associates
+low energies with the regions near the data manifold and higher energies with
+other regions."
+---
+
+## EBGAN
+.center[<img src='images/ebgan.jpg' width="800px"/>]
+---
+
+## CGAN
+[**Jon Gauthier**](http://www.foldl.me/uploads/2015/conditional-gans-face-generation/paper.pdf)
+"Our approach uses a cascade of convolutional
+networks within a Laplacian pyramid framework to generate images in
+a coarse-to-fine fashion."
 ---
 
 ### Remedies
@@ -158,19 +193,16 @@ single images to classifying entire minibatches.[See here](https://arxiv.org/abs
 - **Batch normalization:** Batch normalization has been critical for scaling GANs to
 deep convolutional networks, and virtual batch normalization has extended this by using a
 constant reference batch to prevent correlations in predictions due to the other elements of
-the minibatch.[See here](https://arxiv.org/pdf/1511.06434v2.pdf) and [here](https://arxiv.org/pdf/1502.03167v3.pdf)
+the minibatch.[see here](https://arxiv.org/pdf/1502.03167v3.pdf)
 
 .center[<img src='images/dist.png' width="400px"/>]
 
----
-### Evaluation of Generative models
-https://arxiv.org/pdf/1511.01844v3.pdf
 ---
 ### tutorial's talk
 .center[<iframe width="560" height="315" src="https://www.youtube.com/embed/KeJINHjyzOU" frameborder="0" allowfullscreen></iframe>]
 
 ---
-### let's generate images
+### let's start painting!
 
 .center[<img src='images/painting1.png' width="800px"/>]
 ---
