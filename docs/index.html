@@ -1,0 +1,18 @@
+---
+layout: default
+---
+<script src="{{ "/styles/index.js" | prepend: site.baseurl }}"></script>
+
+<a href="https://github.com/KordingLab/lab_teaching_2016"><i class="fa fa-github" aria-hidden="true"></i> lab teaching</a>
+
+<ul>
+  {% for project in site.data.projects %}
+  <li>
+    <p class="my-item"><a href="{{ project.link }}" class="my-link">{{ project.name }}</a><br>
+      <span class="my-item-sub">
+        {{ project.description }}
+      </span>
+    </p>
+  </li>
+  {% endfor %}
+</ul>

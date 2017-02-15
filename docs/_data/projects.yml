@@ -1,0 +1,44 @@
+- name: "Oct 18th, Max Berniker lab update"
+  link: "http://sensorimotorcontrolatorium.uic.edu/"
+  description: "Prof. Max Berniker, lab alumnae and professor at UIC, will
+  update about research at his lab"
+
+- name: "Oct 25th, Introduction on XGBoost"
+  link: session_2
+  description: "Introduction on XGBoost (extreme gradient boosting) and example code in Python by Titipat"
+
+- name: "Nov 1st, Eva Dyer Practice Talk"
+  link: ""
+  description: "Eva will give her practice her
+  neurosciency talk for Machine learning audience and then talk about challenges in
+  neural data analysis. This will happen on November 1st at 1.30 PM"
+
+- name: "Nov 8th, Generative Adversarial Model"
+  link: "session_4"
+  description: "Roozbeh Farhoodi on Generative Adversarial Networks (GAN).
+  GAN is a very popular deep learning framework that consists of 2 components:
+  discriminative model and generative model . He'll go through some math and gist behind GAN."
+
+- name: "Nov 15th, SfN conference,"
+  link: ""
+  description: "No teaching this week due to SfN conference in San Diego"
+
+- name: "Nov 22nd, Thanks Giving break"
+  link: ""
+  description: "No teaching this week due to Thanks Giving :)"
+
+- name: "Nov 29th, Tutorial on Docker"
+  link: "session_5/Intro to Docker.pdf"
+  description: "Ravi Garg will give tutorial on Docker on November 22nd 3-4 PM, containers that wrap a piece of software in an environment."
+
+- name: "Dec 6th, Optimization methods in Deep learning"
+  link: "session_6"
+  description: "Ari Benjamin on Gradient Descent. Ari will teach us about optimization
+  technique in Deep learning including popular Stochastic Gradient Descent (SGD),
+  Momentum technique, RMSProp, AdaGrad, Adam, Approximate Second Order method,
+  Conjugate gradient method (and more)."
+
+- name: "Feb 16th, Introduction to Python"
+  link: "session_7"
+  description: "Titipat on introduction to Python. This is a first session of Python
+  for beginner."

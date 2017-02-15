@@ -1,0 +1,53 @@
+title: "Kording lab teaching"
+description: "page for Kording lab teaching sessions 2016"
+about: "page for Kording lab teaching sessions 2016"
+location: "Chicago, IL"
+email: koerding@gmail.com
+baseurl: ""
+url: "http://kordinglab.com"
+twitter_username: KordingLab
+github_username: KordingLab
+
+# google analytics tracking code, please change the value
+g_analytics:
+
+# language settings
+isolang: en
+close_btn: "close"
+home_btn: "home"
+projects_btn: "lectures"
+posts_btn: "lectures"
+name_badge: "Kording lab"
+
+# build settings
+markdown: kramdown
+highlighter: rouge
+
+kramdown:
+  input: GFM
+  hard_wrap: false
+  auto_ids: true
+  footnote_nr: 1
+  entity_output: as_char
+  toc_levels: 1..6
+  smart_quotes: lsquo,rsquo,ldquo,rdquo
+  enable_coderay: false
+  syntax_highlighter: rouge
+  syntax_highlighter_opts:
+    tab_width: 4
+
+# third party gems
+gems:
+  - jekyll-paginate
+  - jekyll-gist
+  - jemoji
+
+whitelist:
+  - jekyll-paginate
+  - jekyll-gist
+  - jemoji
+
+# exclude files
+exclude:
+  - LICENSE
+  - README.md

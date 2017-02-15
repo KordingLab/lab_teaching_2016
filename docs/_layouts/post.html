@@ -1,0 +1,43 @@
+---
+layout: default
+---
+<article class="left-align" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <h2 class="my-mini-heading" itemprop="name headline">{{ page.title }}<br>
+    <span class="my-mini-heading-sub">
+    <time datetime="{{ page.date | date_to_xmlschema }}" itemprop="datePublished">
+      {{ page.date | date: "%b %-d, %Y" }}
+    </time>
+    </span></h2>
+
+  <div class="my-text-body">
+    {{ content }}
+  </div>
+
+  <p class="center-align my-text-author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    {% if page.author %}
+      <span itemprop="name">{{ site.name_badge }} {{ page.author }}</span>
+    {% endif %}
+    <br>
+    {% if page.tags %}
+      <i class="fa fa-tags" aria-hidden="true"></i>
+      {% for tag in page.tags %}
+        <span class="my-tag">{{ tag }}</span>&ensp;
+      {% endfor %}
+    {% endif %}
+  </p>
+
+  <div class="center-align">
+  {% if page.next.url %}
+    <a class="waves-effect waves-teal btn-flat btn-large my-thin-btn" href="{{ page.next.url | prepend: site.baseurl }}"><i class="fa fa-angle-double-left" aria-hidden="true"></i></a>
+  {% else %}
+    <a class="waves-effect waves-teal btn-flat btn-large my-thin-btn disabled"><i class="fa fa-angle-double-left" aria-hidden="true"></i></a>
+  {% endif %}
+  <a class="waves-effect waves-teal btn-flat btn-large" href="{{ site.baseurl }}/">{{ site.home_btn }}</a>
+  {% if page.previous.url %}
+    <a class="waves-effect waves-teal btn-flat btn-large my-thin-btn" href="{{ page.previous.url | prepend: site.baseurl }}"><i class="fa fa-angle-double-right" aria-hidden="true"></i></a>
+  {% else %}
+        <a class="waves-effect waves-teal btn-flat btn-large my-thin-btn disabled"><i class="fa fa-angle-double-right" aria-hidden="true"></i></a>
+  {% endif %}
+  </div>
+</article>
