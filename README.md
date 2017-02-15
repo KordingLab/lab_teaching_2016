@@ -23,3 +23,13 @@ in the format as follows:
 Typically, we will stick creating the slide using [`remarkjs`](https://github.com/gnab/remark),
 you can put slide (which is `index.html`) to new folder e.g. `session_2`.
 Editing this page will show up at [kordinglab.com/lab_teaching_2016](http://kordinglab.com/lab_teaching_2016/).
+
+## Run Jekyll page locally
+
+You can change directory to `docs` folder then run
+
+```
+jekyll serve
+```
+
+to serve on local machine
