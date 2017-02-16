@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Deep learning with Keras</title>
+    <meta charset="utf-8">
+    <style>
+
+      @import url(https://fonts.googleapis.com/css?family=Droid+Serif:400,700,400italic);
+      @import url(https://fonts.googleapis.com/css?family=Ubuntu+Mono:400,700,400italic);
+      @import url(https://fonts.googleapis.com/css?family=Source+Sans+Pro|Bungee+Inline|Scope+One);
+      body { font-family: 'Source Sans Pro'; }
+      h1, h2, h3, h4 {
+        font-family: 'Arial Black';
+        font-weight: normal;
+        color: FIREBRICK;
+      }
+      .remark-code, .remark-inline-code {
+        font-family: 'Ubuntu Mono';
+      }
+      a:link {
+        text-decoration: none;
+      }
+    </style>
+  </head>
+  <body>
+    <textarea id="source">
+
+class: center, middle
+
+# Deep learning with Keras
+
+Tutorial on using Keras
+
+<br>
+
+by Luca Lonini
+
+---
+
+## Overview
+
+Plain slide for now
+
+</textarea>
+<script src="https://gnab.github.io/remark/downloads/remark-latest.min.js"></script>
+<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML&delayStartupUntil=configured" type="text/javascript"></script>
+<script>
+  var slideshow = remark.create({
+    ratio: '4:3',
+     navigation: {
+       scroll: false,
+       touch: true,
+       click: false
+    }
+  });
+  // Setup MathJax
+  MathJax.Hub.Config({
+      tex2jax: {
+      skipTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+      }
+  });
+  MathJax.Hub.Queue(function() {
+      $(MathJax.Hub.getAllJax()).map(function(index, elem) {
+          return(elem.SourceElement());
+      }).parent().addClass('has-jax');
+  });
+  MathJax.Hub.Configured();
+</script>
+</body>
+</html>
