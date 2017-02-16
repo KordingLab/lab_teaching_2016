@@ -43,6 +43,6 @@
   description: "Titipat on introduction to Python. This is a first session of Python
   for beginner."
 
-  - name: "TBD, Deep learning using Keras"
-    link: "session_10"
-    description: "Luca Lonini on Keras deep learning library in Python"
+- name: "TBD, Deep learning using Keras"
+  link: "session_10"
+  description: "Luca Lonini on Keras deep learning library in Python"
