@@ -34,13 +34,12 @@ kramdown:
   enable_coderay: false
   syntax_highlighter: rouge
   syntax_highlighter_opts:
-    tab_width: 4
+  tab_width: 4
 
 # third party gems
 gems:
   - jekyll-paginate
   - jekyll-gist
-  - jemoji
 
 whitelist:
   - jekyll-paginate
