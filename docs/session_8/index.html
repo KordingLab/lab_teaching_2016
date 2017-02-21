@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Crash course in Python</title>
+    <meta charset="utf-8">
+    <style>
+
+      @import url(https://fonts.googleapis.com/css?family=Droid+Serif:400,700,400italic);
+      @import url(https://fonts.googleapis.com/css?family=Ubuntu+Mono:400,700,400italic);
+      @import url(https://fonts.googleapis.com/css?family=Source+Sans+Pro|Bungee+Inline|Scope+One);
+      body { font-family: 'Source Sans Pro'; }
+      h1, h2, h3, h4 {
+        font-family: 'Arial Black';
+        font-weight: normal;
+        color: FIREBRICK;
+      }
+      .remark-code, .remark-inline-code {
+        font-family: 'Ubuntu Mono';
+      }
+      a:link {
+        text-decoration: none;
+      }
+    </style>
+  </head>
+  <body>
+    <textarea id="source">
+
+class: center, middle
+
+# Pandas for Data Analysis
+
+<br>
+
+by Titipat Achakulvisut, reference from Python for Data Analysis by Wes McKinney
+
+
+---
+
+## Essential Python Libraries
+
+Recap from last week, here are few libraries that are essentials in Python.
+
+- `numpy` multidimensional array, element-wise computation, linear algebra operations
+- `sciPy` collection of packages addressing a number of different standard problem domains in scientific computing
+(including sparse matrix computation)
+- `pandas` data structures, functions designed to make working with structured data fast, easy, and expressive
+- `matplotlib` producing plots and other 2D data visualizations
+
+Today, we're going to focus on `pandas` library
+
+---
+
+## Getting pandas
+
+`pandas` comes with Anaconda distribution already. You can also update using `pip`
+
+```bash
+pip install pandas --upgrade
+```
+
+Main pandas data structure is the _DataFrame_ (it's like spread sheet, table).
+To create dataframe, you can do something like the following:
+
+```python
+import pandas as pd # convention
+df = pd.DataFrame([{'a': 2, 'b': 3},
+                   {'a': 1, 'b': 2}]) # from list of dictionary
+```
+
+you can also create dataframe from lists of list.
+
+```python
+df = pd.DataFrame([[2, 3], [1, 2]], columns=['a', 'b'])
+```
+
+---
+
+## Read and write files
+
+See [IO Tools](http://pandas.pydata.org/pandas-docs/stable/io.html) for full functionalities.
+To read data to dataframe, you can use:
+
+- `pd.read_csv`
+- `pd.read_excel`
+- `pd.read_json`
+
+And writing are something like following
+
+- `df.to_csv(..., index=False)`
+- `df.to_excel(...)`
+- `df.to_json(..., orient='records')`, you can also select format (`split`, `records`,
+`index`, `columns`, `values`)
+
+Or even write multiple sheets
+
+```python
+writer = pd.ExcelWriter('example_sheets.xlsx')
+df1.to_excel(writer, 'sheet1')
+df2.to_excel(writer, 'sheet2')
+writer.save()
+```
+
+
+---
+
+## Basic functinalities
+
+Describe something quick
+
+```python
+df.describe()
+```
+
+Cast to array/list
+
+```python
+df.as_matrix()
+list(df.as_matrix())
+```
+
+Concatenate dataframe
+
+```python
+df1 = pd.DataFrame([{'a': 2, 'b': 3}, {'a': 1, 'b': 2}])
+df2 = pd.DataFrame([{'a': 4, 'b': 6}, {'a': 3.5, 'b': 10}])
+df_concat = pd.concat((df1, df2), axis=0)
+```
+
+```python
+df1 = pd.DataFrame([{'a': 2, 'b': 3}, {'a': 1, 'b': 2}])
+df2 = pd.DataFrame([{'c': 4, 'd': 6}, {'c': 3.5, 'd': 10}])
+df_concat = pd.concat((df1, df2), axis=1)
+```
+
+---
+
+## Basic functinalities
+
+- `df.fillna('', inplace=True)` fill NaN with empty string
+- `df.drop_duplicates(subset='col_name', inplace=True)` drop duplicated rows, default keep the first row
+
+---
+
+## Chicago Food Inspection
+
+
+
+---
+
+## Q/A
+
+    </textarea>
+    <script src="https://gnab.github.io/remark/downloads/remark-latest.min.js"></script>
+    <script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML&delayStartupUntil=configured" type="text/javascript"></script>
+    <script>
+      var slideshow = remark.create({
+        ratio: '4:3',
+         navigation: {
+           scroll: false,
+           touch: true,
+           click: false
+        }
+      });
+
+      // Setup MathJax
+      MathJax.Hub.Config({
+          tex2jax: {
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+          }
+      });
+      MathJax.Hub.Queue(function() {
+          $(MathJax.Hub.getAllJax()).map(function(index, elem) {
+              return(elem.SourceElement());
+          }).parent().addClass('has-jax');
+      });
+
+      MathJax.Hub.Configured();
+    </script>
+  </body>
+</html>

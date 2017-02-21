@@ -43,6 +43,10 @@
   description: "Titipat on introduction to Python. This is a first session of Python
   for beginner."
 
+- name: "Feb 23th, Pandas for Data Analysis"
+  link: "session_8"
+  description: "Titipat on introduction to Pandas library in Python for data analysis"
+
 - name: "TBD, Deep learning using Keras"
   link: "session_10"
   description: "Luca Lonini on Keras deep learning library in Python"
