@@ -136,14 +136,42 @@ df_concat = pd.concat((df1, df2), axis=1)
 
 ## Basic functinalities
 
-- `df.fillna('', inplace=True)` fill NaN with empty string
-- `df.drop_duplicates(subset='col_name', inplace=True)` drop duplicated rows, default keep the first row
+Fill NaN with empty string
+
+```python
+df.fillna('', inplace=True)
+```
+
+Drop duplicated rows
+
+```python
+df.drop_duplicates(subset='col_name', inplace=True)
+```
+
 
 ---
 
 ## Chicago Food Inspection
 
+Let's explore Chicago food inspection data from the City of Chicago.
+Download data [here](https://data.cityofchicago.org/Health-Human-Services/Food-Inspections/4ijn-s7e5/data).
 
+Reading data using `csv`:
+
+```python
+import csv
+food = list(csv.DictReader(open('Food_Inspections.csv')))
+```
+
+Reading data using `pandas`:
+
+```python
+import pandas as pd
+food_df = pd.read_csv('Food_Inspections.csv').fillna('')
+print(food_df.columns)
+```
+
+We'll explore together in class.
 
 ---
 
