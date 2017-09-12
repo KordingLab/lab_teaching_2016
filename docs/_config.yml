@@ -3,8 +3,8 @@ description: "page for Kording lab teaching sessions 2016"
 about: "page for Kording lab teaching sessions 2016"
 location: "Chicago, IL"
 email: koerding@gmail.com
-baseurl: ""
-url: "http://kordinglab.com"
+baseurl: "http://kordinglab.com/lab_teaching_2016/"
+url: "http://kordinglab.com/lab_teaching_2016/"
 twitter_username: KordingLab
 github_username: KordingLab
 
