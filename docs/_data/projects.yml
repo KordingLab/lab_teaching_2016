@@ -50,3 +50,7 @@
 - name: "TBD, Deep learning using Keras"
   link: "session_10"
   description: "Luca Lonini on Keras deep learning library in Python"
+  
+- name: "[https://docs.google.com/presentation/d/125SwBtm4LazQ_MPi8-LStnHnV1GAZygw9C3Y0d9YTOE/edit?usp=sharing](Sept 12th, Accessing Allen Institute data)"
+  description: "Ari with an overview of Allen Institute data, present and future,
+  and a brief talk about his project at the Dynamic Brain workshop."
